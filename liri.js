@@ -15,41 +15,6 @@ var moment = require('moment');
 var spotify = new Spotify(keys.spotify);
 var inquirer = require('inquirer');
 
-// create concert object
-function Concert(venueName, venueLocation, eventDate) {
-    this.venueName = venueName;
-    this.venueLocation = venueLocation;
-    this.eventDate = eventDate;
-    this.displayConcert = function () {
-        logConcert(this.venueName, this.venueLocation, this.eventDate);
-    }
-}
-
-// create song object
-function Song(artist, songName, previewLink, album) {
-    this.artist = artist;
-    this.songName = songName;
-    this.previewLink = previewLink;
-    this.album = album;
-    this.displaySong = function () {
-        logSong(this.artist, this.songName, this.previewLink, this.album);
-    }
-}
-
-// create movie object
-function Movie(title, releaseYear, imdbRating, rottenTomatoes, countryProduced, language, plot, actors) {
-    this.title = title;
-    this.releaseYear = releaseYear;
-    this.imdbRating = imdbRating;
-    this.rottenTomatoes = rottenTomatoes;
-    this.countryProduced = countryProduced;
-    this.language = language;
-    this.plot = plot;
-    this.actors = actors;
-    this.displayMovie = function () {
-        logMovie(this.title, this.releaseYear, this.imdbRating, this.rottenTomatoes, this.countryProduced, this.language, this.plot, this.actors);
-    }
-}
 inquirer.prompt([
     // Ask the user what they would like to do today
     {
@@ -155,6 +120,16 @@ inquirer.prompt([
     }
 });
 
+// create concert object
+function Concert(venueName, venueLocation, eventDate) {
+    this.venueName = venueName;
+    this.venueLocation = venueLocation;
+    this.eventDate = eventDate;
+    this.displayConcert = function () {
+        logConcert(this.venueName, this.venueLocation, this.eventDate);
+    }
+}
+
 // pull data to build concert information
 function buildConcert(event) {
     var venueName = event.venue.name;
@@ -167,12 +142,21 @@ function buildConcert(event) {
 
 // log concert information
 function logConcert(venueName, venueLocation, eventDate) {
-    console.log("\n---------------------------------\n");
-    console.log("Venue Name: " + venueName);
-    console.log("Venue Location: " + venueLocation);
-    console.log("Event Date: " + eventDate);
-    console.log("\n---------------------------------\n");
+    console.log("\n---------------------------------\nVenue Name: " + venueName +
+        "\nVenue Location: " + venueLocation + "\nEvent Date: " + eventDate +
+        "\n---------------------------------\n");
 
+}
+
+// create song object
+function Song(artist, songName, previewLink, album) {
+    this.artist = artist;
+    this.songName = songName;
+    this.previewLink = previewLink;
+    this.album = album;
+    this.displaySong = function () {
+        logSong(this.artist, this.songName, this.previewLink, this.album);
+    }
 }
 
 // pull data to build song information
@@ -187,22 +171,34 @@ function buildSong(data) {
 
 // log song information
 function logSong(artist, songName, previewLink, album) {
-    console.log("\n---------------------------------\n");
-    console.log("Artist Name: " + artist)
-    console.log("Song Name: " + songName)
-    console.log("Spotify Preview: " + previewLink)
-    console.log("Album Name: " + album)
-    console.log("\n---------------------------------\n");
+    console.log("\n---------------------------------\nArtist Name: " + artist +
+        "\nSong Name: " + songName + "\nSpotify Preview: " + previewLink +
+        "\nAlbum Name: " + album + "\n---------------------------------\n");
 
 }
 
-// pull data to build song information
+// create movie object
+function Movie(title, releaseYear, imdbRating, rottenTomatoes, countryProduced, language, plot, actors) {
+    this.title = title;
+    this.releaseYear = releaseYear;
+    this.imdbRating = imdbRating;
+    this.rottenTomatoes = rottenTomatoes;
+    this.countryProduced = countryProduced;
+    this.language = language;
+    this.plot = plot;
+    this.actors = actors;
+    this.displayMovie = function () {
+        logMovie(this.title, this.releaseYear, this.imdbRating, this.rottenTomatoes, this.countryProduced, this.language, this.plot, this.actors);
+    }
+}
+
+// pull data to build movie information
 function buildMovie(movie) {
     var title = movie.Title;
     var releaseYear = movie.Year;
     var imdbRating = movie.imdbRating;
-    if (null != movie.Ratings[2].value) {
-        var rottenTomatoes = movie.Ratings[2].value;
+    if (null != movie.Ratings[2].Value) {
+        var rottenTomatoes = movie.Ratings[2].Value;
     }
     else {
         var rottenTomatoes = "No Rotten Tomatoes rating available"
@@ -217,14 +213,9 @@ function buildMovie(movie) {
 
 // log movie information
 function logMovie(title, releaseYear, imdbRating, rottenTomatoes, countryProduced, language, plot, actors) {
-    console.log("\n---------------------------------\n");
-    console.log("Movie Title: " + title);
-    console.log("Release Year: " + releaseYear);
-    console.log("IMDB Rating: " + imdbRating);
-    console.log("Rotten Tomato Rating: " + rottenTomatoes);
-    console.log("Country Produced In: " + countryProduced);
-    console.log("Language: " + language);
-    console.log("Plot: " + plot);
-    console.log("Actors: " + actors);
-    console.log("\n---------------------------------\n");
+    console.log("\n---------------------------------\nMovie Title: " + title +
+        "\nRelease Year: " + releaseYear + "\nIMDB Rating: " + imdbRating +
+        "\nRotten Tomato Rating: " + rottenTomatoes + "\nCountry Produced In: " + countryProduced +
+        "\nLanguage: " + language + "\nPlot: " + plot + "\nActors: " + actors +
+        "\n---------------------------------\n");
 }
