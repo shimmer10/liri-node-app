@@ -3,7 +3,7 @@
 ## **This page is designed pull information based on user input**
 
 ### **This program starts by prompting the user for a choice**
-     * The options are 'Concert', 'Song', 'Movie', or 'Suprise Me'
+     * The options are 'Concert', 'Song', 'Movie', or 'Surprise Me'
 ### **If the user chooses 'Concert' they will be prompted to enter an artist**
      * The input will be used to search the Bandsintown api
         * If the user does not enter an artist a validation is hit asking them to enter one
@@ -33,5 +33,5 @@
         * Language
         * Plot
         * Actors
-### **If the user chooses 'Suprise Me'**
+### **If the user chooses 'Surprise Me'**
      * 

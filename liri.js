@@ -21,7 +21,7 @@ inquirer.prompt([
     {
         type: "list",
         message: "What should we search?",
-        choices: ["Concerts", "Songs", "Movies", "Suprise Me"],
+        choices: ["Concerts", "Songs", "Movies", "Surprise Me"],
         name: "action"
     }
 ]).then(function (concertResponse) {
@@ -111,8 +111,8 @@ inquirer.prompt([
             })
         });
     }
-    if (action === "Suprise Me") {
-        console.log("Suprise!!");
+    if (action === "Surprise Me") {
+        console.log("Surprise!!");
         fs.readFile("random.txt", "utf8", function(err, data) {
             if (err) {
               return console.log(err);
