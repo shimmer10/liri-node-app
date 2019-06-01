@@ -8,6 +8,7 @@
 
 // adding node dependencies
 require("dotenv").config();
+var fs = require("fs");
 var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 var axios = require('axios');
@@ -32,7 +33,13 @@ inquirer.prompt([
             {
                 type: "input",
                 message: "What artist would you like the concert information of?",
-                name: "artist"
+                name: "artist",
+                validate: function notBlankValidation(userInput) {
+                    if (userInput != "") {
+                        return true
+                    }
+                    return "You must enter an artist to look up";
+                }
             }
         ]).then(function (artistResponse) {
             var artist = artistResponse.artist;
@@ -106,17 +113,14 @@ inquirer.prompt([
     }
     if (action === "Suprise Me") {
         console.log("Suprise!!");
-        // inquirer.prompt([
-        //     //We ask for the name of the song
-        //     {
-        //         type: "input",
-        //         message: "What movie would you like to search?",
-        //         name: "movie"
-        //     }
-        // ]).then(function (movieResponse) {
-        //     var movie = movieResponse.movie;
-        //     console.log(movie);
-        // });
+        fs.readFile("random.txt", "utf8", function(err, data) {
+            if (err) {
+              return console.log(err);
+            }
+        
+            // We will then print the final balance rounded to two decimal places.
+            console.log(data);
+          });
     }
 });
 

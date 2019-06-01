@@ -6,6 +6,7 @@
      * The options are 'Concert', 'Song', 'Movie', or 'Suprise Me'
 ### **If the user chooses 'Concert' they will be prompted to enter an artist**
      * The input will be used to search the Bandsintown api
+        * If the user does not enter an artist a validation is hit asking them to enter one
      * The concert information for that artist will be displayed in the console
      * Concert information includes:
         * Venue Name
