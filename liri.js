@@ -16,6 +16,9 @@ var moment = require('moment');
 var spotify = new Spotify(keys.spotify);
 var inquirer = require('inquirer');
 
+// array
+randomPickArray = [];
+
 inquirer.prompt([
     // Ask the user what they would like to do today
     {
@@ -43,16 +46,7 @@ inquirer.prompt([
             }
         ]).then(function (artistResponse) {
             var artist = artistResponse.artist;
-            var concertQuery = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
-            axios.get(concertQuery).then(function (bandsResponse) {
-                for (var i = 0; i < bandsResponse.data.length; i++) {
-                    var event = bandsResponse.data[i];
-                    buildConcert(event);
-                }
-            })
-                .catch(function (err) {
-                    console.log(err);
-                })
+            searchBandsInTown(artist);
         });
     }
     if (action === "Songs") {
@@ -76,14 +70,7 @@ inquirer.prompt([
                     });
             }
             else {
-                spotify.search({ type: 'track', query: song }, function (err, data) {
-                    if (err) {
-                        return console.log('Error occurred: ' + err);
-                    }
-                    for (var i = 0; i < data.tracks.items.length; i++) {
-                        buildSong(data.tracks.items[i]);
-                    }
-                });
+                searchSpotify(song);
             }
         });
     }
@@ -98,29 +85,34 @@ inquirer.prompt([
         ]).then(function (movieResponse) {
             var movie = movieResponse.movie;
             if (movie === "") {
-                var movieQuery = "https://www.omdbapi.com/?apikey=trilogy&t=Mr. Nobody";
+                var movie = "Mr. Nobody";
             }
-            else {
-                var movieQuery = "https://www.omdbapi.com/?apikey=trilogy&t=" + movie;
-            }
-            console.log(movieQuery)
-            axios.get(movieQuery).then(function (movieResponse) {
-                buildMovie(movieResponse.data);
-            }).catch(function (err) {
-                console.log(err);
-            })
+            searchOMDB(movie);
         });
     }
     if (action === "Surprise Me") {
         console.log("Surprise!!");
-        fs.readFile("random.txt", "utf8", function(err, data) {
+        fs.readFile("random.txt", "utf8", function (err, data) {
             if (err) {
-              return console.log(err);
+                return console.log(err);
             }
-        
-            // We will then print the final balance rounded to two decimal places.
-            console.log(data);
-          });
+
+            randomPickArray = data.toString().split(",");
+            var pick = randomPickArray[Math.floor(Math.random() * 6)].toString().split(":");
+            var randomAction = pick[0].toString();
+            var searchTopic = pick[1];
+
+            if (randomAction.toString() === "Concerts") {
+                searchBandsInTown(searchTopic);
+            }
+            if (randomAction.toString() === "Songs") {
+                searchSpotify(searchTopic);
+            }
+            if (randomAction.toString() === "Movies") {
+                searchOMDB(searchTopic);
+
+            }
+        });
     }
 });
 
@@ -134,10 +126,31 @@ function Concert(venueName, venueLocation, eventDate) {
     }
 }
 
+// search bands in town api
+function searchBandsInTown(artist) {
+    var concertQuery = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
+
+    axios.get(concertQuery).then(function (bandsResponse) {
+        for (var i = 0; i < bandsResponse.data.length; i++) {
+            var event = bandsResponse.data[i];
+            buildConcert(event);
+        }
+    })
+        .catch(function (err) {
+            console.log(err);
+        })
+}
+
 // pull data to build concert information
 function buildConcert(event) {
     var venueName = event.venue.name;
-    var venueLocation = event.venue.city;
+    var venueLocation = event.venue.city 
+    if ("" != event.venue.region) {
+        venueLocation += ", " + event.venue.region;
+     }
+     if ("" != event.venue.country) {
+        venueLocation += ", " + event.venue.country;
+     }
     var eventDate = event.datetime;
     m = moment(eventDate).format('MMM Do YYYY')
     var concert = new Concert(venueName, venueLocation, m)
@@ -161,6 +174,19 @@ function Song(artist, songName, previewLink, album) {
     this.displaySong = function () {
         logSong(this.artist, this.songName, this.previewLink, this.album);
     }
+}
+
+// search spotify
+function searchSpotify(song) {
+
+    spotify.search({ type: 'track', query: song }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        for (var i = 0; i < data.tracks.items.length; i++) {
+            buildSong(data.tracks.items[i]);
+        }
+    });
 }
 
 // pull data to build song information
@@ -194,6 +220,17 @@ function Movie(title, releaseYear, imdbRating, rottenTomatoes, countryProduced, 
     this.displayMovie = function () {
         logMovie(this.title, this.releaseYear, this.imdbRating, this.rottenTomatoes, this.countryProduced, this.language, this.plot, this.actors);
     }
+}
+
+// search omdb
+function searchOMDB(movie) {
+    var movieQuery = "https://www.omdbapi.com/?apikey=trilogy&t=" + movie;
+
+    axios.get(movieQuery).then(function (movieResponse) {
+        buildMovie(movieResponse.data);
+    }).catch(function (err) {
+        console.log(err);
+    })
 }
 
 // pull data to build movie information
