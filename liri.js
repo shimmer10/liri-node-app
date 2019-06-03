@@ -146,13 +146,13 @@ function searchBandsInTown(artist) {
 // pull data to build concert information
 function buildConcert(event) {
     var venueName = event.venue.name;
-    var venueLocation = event.venue.city 
+    var venueLocation = event.venue.city
     if ("" != event.venue.region) {
         venueLocation += ", " + event.venue.region;
-     }
-     if ("" != event.venue.country) {
+    }
+    if ("" != event.venue.country) {
         venueLocation += ", " + event.venue.country;
-     }
+    }
     var eventDate = event.datetime;
     m = moment(eventDate).format('MMM Do YYYY')
     var concert = new Concert(venueName, venueLocation, m)
@@ -240,12 +240,15 @@ function buildMovie(movie) {
     var title = movie.Title;
     var releaseYear = movie.Year;
     var imdbRating = movie.imdbRating;
-    if (null != movie.Ratings[2].Value) {
-        var rottenTomatoes = movie.Ratings[2].Value;
+    var rottenTomatoes;
+    try {
+        if (typeof movie.Ratings[2].Value !== 'undefined') {
+            rottenTomatoes = movie.Ratings[2].Value;
+        }
+    } catch (e) {
+        rottenTomatoes = "No Rotten Tomatoes rating available"
     }
-    else {
-        var rottenTomatoes = "No Rotten Tomatoes rating available"
-    }
+    
     var countryProduced = movie.Country;
     var language = movie.Language;
     var plot = movie.Plot;
@@ -253,6 +256,8 @@ function buildMovie(movie) {
     var movie = new Movie(title, releaseYear, imdbRating, rottenTomatoes, countryProduced, language, plot, actors);
     movie.displayMovie();
 }
+
+
 
 // log movie information
 function logMovie(title, releaseYear, imdbRating, rottenTomatoes, countryProduced, language, plot, actors) {
@@ -265,6 +270,6 @@ function logMovie(title, releaseYear, imdbRating, rottenTomatoes, countryProduce
 
 // replace all functionality
 
-String.prototype.replaceAll = function(target, replacement) {
-  return this.split(target).join(replacement);
+String.prototype.replaceAll = function (target, replacement) {
+    return this.split(target).join(replacement);
 };
