@@ -34,4 +34,6 @@
         * Plot
         * Actors
 ### **If the user chooses 'Surprise Me'**
-     * 
+     * The program will choose a random item from the random.txt file
+     * Depending on what random item is chosen, it will look up a concert, song, or movie. 
+        * These are all defined in the random.txt file
