@@ -91,26 +91,28 @@ inquirer.prompt([
         });
     }
     if (action === "Surprise Me") {
-        console.log("Surprise!!");
         fs.readFile("random.txt", "utf8", function (err, data) {
             if (err) {
                 return console.log(err);
             }
 
-            randomPickArray = data.toString().split(",");
-            var pick = randomPickArray[Math.floor(Math.random() * 6)].toString().split(":");
-            var randomAction = pick[0].toString();
-            var searchTopic = pick[1];
+            randomPickArray = data.toString().split("\n");
+            var arrayLength = randomPickArray.length
+            var pick = randomPickArray[Math.floor(Math.random() * arrayLength)].split(",");
+            var randomAction = pick[0];
+            var searchTopic = pick[1].replaceAll("\"", "")
 
-            if (randomAction.toString() === "Concerts") {
+            if (randomAction === "Concerts") {
+                console.log("\n** Finding concert information for " + searchTopic + " **");
                 searchBandsInTown(searchTopic);
             }
-            if (randomAction.toString() === "Songs") {
+            if (randomAction === "Songs") {
+                console.log("\n** Finding song information for \"" + searchTopic + "\" **");
                 searchSpotify(searchTopic);
             }
-            if (randomAction.toString() === "Movies") {
+            if (randomAction === "Movies") {
+                console.log("\n** Finding movie information for \"" + searchTopic + "\" **");
                 searchOMDB(searchTopic);
-
             }
         });
     }
@@ -260,3 +262,9 @@ function logMovie(title, releaseYear, imdbRating, rottenTomatoes, countryProduce
         "\nLanguage: " + language + "\nPlot: " + plot + "\nActors: " + actors +
         "\n---------------------------------\n");
 }
+
+// replace all functionality
+
+String.prototype.replaceAll = function(target, replacement) {
+  return this.split(target).join(replacement);
+};
